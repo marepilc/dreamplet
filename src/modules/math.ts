@@ -7,3 +7,16 @@ export function constrain(v: number, l1: number, l2: number): number {
         return v
     }
 }
+
+export function round(v: number, decimal?: number): number {
+    // round
+    if (decimal) {
+        let n = 1
+        for (let i = 0; i < decimal; i++) {
+            n *= 10
+        }
+        return Math.round(v * n) / n
+    } else {
+        return Math.round(v)
+    }
+}
