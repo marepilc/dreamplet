@@ -18,6 +18,21 @@ export class Dreamplet {
     public draw?: () => void
     public fps: number = 60
     public still: boolean = false
+
+    // Typography
+    private _fontStyle: string = 'normal'
+    private _fontWeight: string = 'normal'
+    private _fontSize: number = 16
+    private _fontUnit: string = 'px'
+    private _fontFamily: string = 'sans-serif'
+    private _lineHeight: number = 1.2
+    private _textAlign: CanvasTextAlign = 'start'
+    private _textBaseline: CanvasTextBaseline = 'alphabetic'
+
+    // Resolution
+    private _scaleCoefficient: number = 1
+
+    // Animation
     private _currentFrame: number = 0
     private _currentFill: string | CanvasGradient = 'gray'
     private _currentStroke: string = 'black'
@@ -35,21 +50,31 @@ export class Dreamplet {
             this.canvas = options.canvas
         } else {
             this.canvas = document.createElement('canvas')
-            // Append the canvas to the provided container, or document body by default.
             ;(options.container || document.body).appendChild(this.canvas)
         }
 
-        // Set dimensions (with defaults)
+        // Set logical width and height (drawing surface size)
         this.width = options.width || 400
         this.height = options.height || 400
-        this.canvas.width = this.width
-        this.canvas.height = this.height
+
+        // Handle pixel ratio for high-DPI screens
+        const pixelRatio =
+            (window.devicePixelRatio || 1) * this._scaleCoefficient
+
+        // Ensure CSS width and height are set for visual appearance
+        this.canvas.style.width = `${this.width}px`
+        this.canvas.style.height = `${this.height}px`
+
+        // Set actual canvas resolution for drawing, adjusted for pixel ratio
+        this.canvas.width = this.width * pixelRatio
+        this.canvas.height = this.height * pixelRatio
 
         const ctx = this.canvas.getContext('2d')
         if (!ctx) {
             throw new Error('Could not get 2D context from canvas.')
         }
         this.ctx = ctx
+        this.ctx.scale(pixelRatio, pixelRatio)
     }
 
     public get currentFrame(): number {
@@ -270,5 +295,102 @@ export class Dreamplet {
         this.ctx.shadowBlur = 0
         this.ctx.shadowOffsetX = 0
         this.ctx.shadowOffsetY = 0
+    }
+
+    // Typography
+    public get fontStyle(): string {
+        return this._fontStyle
+    }
+
+    public set fontStyle(value: string) {
+        this._fontStyle = value
+        this._setFont()
+    }
+
+    public get fontWeight(): string {
+        return this._fontWeight
+    }
+
+    public set fontWeight(value: string) {
+        this._fontWeight = value
+        this._setFont()
+    }
+
+    public get fontSize(): number {
+        return this._fontSize
+    }
+
+    public set fontSize(value: number) {
+        this._fontSize = value
+        this._setFont()
+    }
+
+    public get fontUnit(): string {
+        return this._fontUnit
+    }
+
+    public set fontUnit(value: string) {
+        this._fontUnit = value
+        this._setFont()
+    }
+
+    public get fontFamily(): string {
+        return this._fontFamily
+    }
+
+    public set fontFamily(value: string) {
+        this._fontFamily = value
+        this._setFont()
+    }
+
+    public get lineHeight(): number {
+        return this._lineHeight
+    }
+
+    public set lineHeight(value: number) {
+        this._lineHeight = value
+    }
+
+    public get textAlign(): CanvasTextAlign {
+        return this._textAlign
+    }
+
+    public set textAlign(value: CanvasTextAlign) {
+        this._textAlign = value
+    }
+
+    public get textBaseline(): CanvasTextBaseline {
+        return this._textBaseline
+    }
+
+    public set textBaseline(value: CanvasTextBaseline) {
+        this._textBaseline = value
+    }
+
+    public textWidth(text: string): number {
+        return this.ctx.measureText(text).width
+    }
+
+    public textDim(text: string): {
+        width: number
+        height: number
+    } {
+        const lines = text.split('\n')
+        const width = Math.max(...lines.map((line) => this.textWidth(line)))
+        const height = this.fontSize * this.lineHeight * lines.length
+        return { width, height }
+    }
+
+    private _setFont(): void {
+        this.ctx.font = `${this._fontStyle} ${this._fontWeight} ${this._fontSize}${this._fontUnit} ${this._fontFamily}`
+    }
+
+    // Resolution
+    public get scaleCoefficient(): number {
+        return this._scaleCoefficient
+    }
+
+    public set scaleCoefficient(value: number) {
+        this._scaleCoefficient = value
     }
 }
