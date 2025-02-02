@@ -357,6 +357,7 @@ export class Dreamplet {
 
     public set textAlign(value: CanvasTextAlign) {
         this._textAlign = value
+        this.ctx.textAlign = value
     }
 
     public get textBaseline(): CanvasTextBaseline {
@@ -365,6 +366,7 @@ export class Dreamplet {
 
     public set textBaseline(value: CanvasTextBaseline) {
         this._textBaseline = value
+        this.ctx.textBaseline = value
     }
 
     public textWidth(text: string): number {
