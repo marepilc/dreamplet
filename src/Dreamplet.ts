@@ -10,14 +10,15 @@ export class Dreamplet {
     public ctx: CanvasRenderingContext2D
     public width: number
     public height: number
-    // Optional asset preloader function
     public preloader?: () => Promise<void>
     public setup?: () => void
     public draw?: () => void
     // Desired frames per second (default is 60)
     public fps: number = 60
+    // When true, the draw function is called only once
+    public still: boolean = false
 
-    // Internal variables for fps control
+    // Internal variables for loop control
     private _running: boolean = false
     private _frameInterval: number = 1000 / this.fps
     private _lastTime: number = 0
@@ -66,8 +67,14 @@ export class Dreamplet {
             this.setup()
         }
         this._running = true
-        // Start the loop with an initial timestamp.
-        requestAnimationFrame((time) => this.loop(time))
+        // If still is true, call draw once and don't start the loop.
+        if (this.still) {
+            if (this.draw) {
+                this.draw()
+            }
+        } else {
+            requestAnimationFrame((time) => this.loop(time))
+        }
     }
 
     public stop() {
@@ -75,28 +82,31 @@ export class Dreamplet {
     }
 
     /**
-     * The main loop is throttled to update only when enough time has passed.
+     * The main loop, throttled to update only when enough time has passed.
+     * If the still property is true, the loop halts after one draw.
      * @param currentTime - The timestamp provided by requestAnimationFrame.
      */
     private loop(currentTime: number) {
         if (!this._running) return
-
-        // If _lastTime is not set yet, initialize it with the current time.
         if (!this._lastTime) {
             this._lastTime = currentTime
         }
-
         const elapsed = currentTime - this._lastTime
         if (elapsed >= this._frameInterval) {
-            // Call the draw function only if it's time for the next frame.
             if (this.draw) {
                 this.draw()
             }
-            // Update the last frame time.
             this._lastTime = currentTime
+            // If still is true, stop running after one draw.
+            if (this.still) {
+                this._running = false
+                return
+            }
         }
         requestAnimationFrame((time) => this.loop(time))
     }
+
+    // drawing
 
     public clear() {
         this.ctx.clearRect(0, 0, this.width, this.height)
@@ -106,13 +116,4 @@ export class Dreamplet {
         this.ctx.fillStyle = color
         this.ctx.fillRect(0, 0, this.width, this.height)
     }
-
-    // Example helper method: draw a circle
-    public circle(x: number, y: number, radius: number) {
-        this.ctx.beginPath()
-        this.ctx.arc(x, y, radius, 0, Math.PI * 2)
-        this.ctx.fill()
-    }
-
-    // Additional drawing helper methods can be added here...
 }
