@@ -53,10 +53,19 @@ export class Dreamplet {
             ;(options.container || document.body).appendChild(this.canvas)
         }
 
+        const ctx = this.canvas.getContext('2d')
+        if (!ctx) {
+            throw new Error('Could not get 2D context from canvas.')
+        }
+        this.ctx = ctx
+
         // Set logical width and height (drawing surface size)
         this.width = options.width || 400
         this.height = options.height || 400
+        this._setContext()
+    }
 
+    private _setContext(): void {
         // Handle pixel ratio for high-DPI screens
         const pixelRatio =
             (window.devicePixelRatio || 1) * this._scaleCoefficient
@@ -75,8 +84,17 @@ export class Dreamplet {
         }
         this.ctx = ctx
         this.ctx.scale(pixelRatio, pixelRatio)
+        this.ctx.fillStyle = this._currentFill
+        this.ctx.strokeStyle = this._currentStroke
     }
 
+    public resize(width: number, height: number): void {
+        this.canvas.style.width = `${width}px`
+        this.canvas.style.height = `${height}px`
+        this._setContext()
+    }
+
+    // Animation
     public get currentFrame(): number {
         return this._currentFrame
     }
