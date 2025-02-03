@@ -1,11 +1,19 @@
 {
   "name": "dreamplet",
-  "private": true,
+  "description": "Easy-to-use TypeScript library for creative coding and data visualization.",
+  "author": "Marek Pilczuk",
+  "license": "MIT",
+  "keywords": ["creative coding", "data visualization", "typescript"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marepilc/dreamplet.git"
+  },
   "version": "1.0.0",
   "type": "module",
   "main": "dist/dreamplet.umd.js",
   "module": "dist/dreamplet.es.js",
   "types": "dist/index.d.ts",
+  "files": ["dist"],
   "scripts": {
     "dev": "vite",
     "build": "tsc --emitDeclarationOnly && vite build",
