@@ -261,7 +261,7 @@ export class Vector {
     /**
      * Normalizes the vector and return as a new one (calling vector remains unchanged.)
      */
-    public norm(): Vector {
+    public normalize(): Vector {
         let e1 = this._x / Math.sqrt(this._x * this._x + this.y * this.y)
         let e2 = this._y / Math.sqrt(this._x * this._x + this._y * this._y)
         return new Vector(e1, e2)
@@ -270,7 +270,7 @@ export class Vector {
     /**
      * Normalizes the vector.
      */
-    public norm2(): void {
+    public normalize2(): void {
         let e1 = this._x / Math.sqrt(this._x * this._x + this._y * this._y)
         let e2 = this._y / Math.sqrt(this._x * this._x + this._y * this._y)
         this._x = e1

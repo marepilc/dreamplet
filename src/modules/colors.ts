@@ -119,3 +119,13 @@ export function linearGradient(
     })
     return gradient
 }
+
+export function imageData(
+    dpl: Dreamplet,
+    x: number,
+    y: number,
+    width: number = 1,
+    height: number = 1
+): ImageData {
+    return dpl.ctx.getImageData(x, y, width, height, {})
+}

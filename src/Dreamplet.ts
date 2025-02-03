@@ -1,16 +1,21 @@
 import { color2rgba } from './modules/colors'
+import { Mouse } from './modules/mouse'
+import { Keyboard } from './modules/keyboard'
 
 export interface DreampletOptions {
     canvas?: HTMLCanvasElement
     container?: HTMLElement
     width?: number
     height?: number
+    willReadFrequently?: boolean
 }
 
 export class Dreamplet {
     public canvas: HTMLCanvasElement
     public ctx: CanvasRenderingContext2D
     public assets: { [key: string]: any } = {}
+    public mouse: Mouse | null = null
+    public keyboard: Keyboard | null = null
     public width: number
     public height: number
     public preloader?: () => Promise<void>
@@ -18,6 +23,8 @@ export class Dreamplet {
     public draw?: () => void
     public fps: number = 60
     public still: boolean = false
+
+    private _willReadFrequently: boolean = false
 
     // Typography
     private _fontStyle: string = 'normal'
@@ -52,8 +59,13 @@ export class Dreamplet {
             this.canvas = document.createElement('canvas')
             ;(options.container || document.body).appendChild(this.canvas)
         }
+        if (options.willReadFrequently) {
+            this._willReadFrequently = true
+        }
 
-        const ctx = this.canvas.getContext('2d')
+        const ctx = this.canvas.getContext('2d', {
+            willReadFrequently: this._willReadFrequently,
+        })
         if (!ctx) {
             throw new Error('Could not get 2D context from canvas.')
         }
@@ -78,7 +90,9 @@ export class Dreamplet {
         this.canvas.width = this.width * pixelRatio
         this.canvas.height = this.height * pixelRatio
 
-        const ctx = this.canvas.getContext('2d')
+        const ctx = this.canvas.getContext('2d', {
+            willReadFrequently: this._willReadFrequently,
+        })
         if (!ctx) {
             throw new Error('Could not get 2D context from canvas.')
         }
@@ -190,6 +204,17 @@ export class Dreamplet {
         }
         this._currentFrame++
         requestAnimationFrame((time) => this.loop(time))
+    }
+
+    public teardown() {
+        this.stop()
+        this.ctx.clearRect(0, 0, this.width, this.height)
+        if (this.mouse) {
+            this.mouse.destroy()
+        }
+        if (this.keyboard) {
+            this.keyboard.destroy()
+        }
     }
 
     // drawing

@@ -15,8 +15,8 @@ import { Dreamplet, Mouse, Keyboard } from 'dreamplet'
 
 const dreamplet = new Dreamplet()
 const sketch = new Dreamplet({ container, width: 800, height: 600 })
-const mouse = new Mouse(sketch.canvas)
-const keyboard = new Keyboard(sketch.canvas)
+this.mouse = new Mouse(sketch.canvas)
+this.keyboard = new Keyboard(sketch.canvas)
 
 sketch.preloader = async () => {
     sketch.assets['avatar'] = await loadImage('assets/avatar.jpeg')
@@ -43,14 +43,18 @@ sketch.draw = () => {
 }
 
 // add onCkick event
-mouse.click = () => {
+this.mouse.click = () => {
     console.log('Clicked!')
 }
 
 // add onKeyPress event
-keyboard.keyUp = (key) => {
+this.keyboard.keyUp = (key) => {
     console.log('Pressed:', key)
 }
+
+window.addEventListener('beforeunload', () => {
+    sketch.teardown()
+})
 
 sketch.start()
 ```

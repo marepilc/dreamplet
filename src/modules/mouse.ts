@@ -1,4 +1,4 @@
-import { Vector, abs, round } from './math'
+import { Vector, round } from './math'
 
 export class Mouse {
     private _canvas: HTMLCanvasElement
@@ -8,46 +8,17 @@ export class Mouse {
     private _py: number
     private readonly _pos: Vector
     private readonly _ppos: Vector
-    /**
-     * Returns `true` if any of the mouse buttons is pressed.
-     */
+
     public isPressed: boolean
-    /**
-     *  Returns button number.
-     */
     public button: number | null
-    /**
-     * This function may be defined by user
-     */
     public wheel: ((e: WheelEvent) => void) | null
-    /**
-     * This function may be defined by user
-     */
     public down: ((e: MouseEvent) => void) | null
-    /**
-     * This function may be defined by user
-     */
     public up: ((e: MouseEvent) => void) | null
-    /**
-     * This function may be defined by user
-     */
     public click: ((e: MouseEvent) => void) | null
-    /**
-     * This function may be defined by user
-     */
     public dblClick: ((e: MouseEvent) => void) | null
-    /**
-     * This function may be defined by user
-     */
-    public move: (() => void) | null
-    /**
-     * This function may be defined by user
-     */
-    public enter: (() => void) | null
-    /**
-     * This function may be defined by user
-     */
-    public leave: (() => void) | null
+    public move: ((e: MouseEvent) => void) | null
+    public enter: ((e: MouseEvent) => void) | null
+    public leave: ((e: MouseEvent) => void) | null
 
     constructor(canvas: HTMLCanvasElement) {
         this._canvas = canvas
@@ -68,98 +39,92 @@ export class Mouse {
         this.enter = null
         this.leave = null
 
-        this._canvas.addEventListener('mousemove', (e: MouseEvent) => {
-            this._updateMousePos(canvas, e)
-            if (this.move) this.move()
-        })
-        this._canvas.addEventListener('wheel', (e: WheelEvent) => {
-            this._updateMousePos(canvas, e)
-            if (this.wheel != null) {
-                this.wheel(e)
-            }
-        })
-        this._canvas.addEventListener(
-            'mousedown',
-            (e: MouseEvent) => {
-                this.isPressed = true
-                this.button = e.button
-                if (this.down != null) {
-                    this.down(e)
-                }
-            },
-            false
-        )
-        this._canvas.addEventListener(
-            'mouseup',
-            (e: MouseEvent) => {
-                this.isPressed = false
-                this.button = null
-                if (this.up != null) {
-                    this.up(e)
-                }
-            },
-            false
-        )
-        this._canvas.addEventListener(
-            'click',
-            (e: MouseEvent) => {
-                if (this.click != null) {
-                    this.click(e)
-                }
-            },
-            false
-        )
-        this._canvas.addEventListener(
-            'dblclick',
-            (e: MouseEvent) => {
-                if (this.dblClick != null) {
-                    this.dblClick(e)
-                }
-            },
-            false
-        )
-        this._canvas.addEventListener('mouseenter', () => {
-            if (typeof this.enter === 'function') this.enter()
-        })
-        this._canvas.addEventListener('mouseleave', () => {
-            if (typeof this.leave === 'function') this.leave()
-        })
+        this._bindEvents()
     }
 
-    private _updateMousePos(canvas: HTMLCanvasElement, e: MouseEvent) {
+    private _bindEvents() {
+        this._canvas.addEventListener('mousemove', this._onMouseMove)
+        this._canvas.addEventListener('wheel', this._onWheel)
+        this._canvas.addEventListener('mousedown', this._onMouseDown)
+        this._canvas.addEventListener('mouseup', this._onMouseUp)
+        this._canvas.addEventListener('click', this._onClick)
+        this._canvas.addEventListener('dblclick', this._onDblClick)
+        this._canvas.addEventListener('mouseenter', this._onEnter)
+        this._canvas.addEventListener('mouseleave', this._onLeave)
+    }
+
+    public destroy() {
+        this._canvas.removeEventListener('mousemove', this._onMouseMove)
+        this._canvas.removeEventListener('wheel', this._onWheel)
+        this._canvas.removeEventListener('mousedown', this._onMouseDown)
+        this._canvas.removeEventListener('mouseup', this._onMouseUp)
+        this._canvas.removeEventListener('click', this._onClick)
+        this._canvas.removeEventListener('dblclick', this._onDblClick)
+        this._canvas.removeEventListener('mouseenter', this._onEnter)
+        this._canvas.removeEventListener('mouseleave', this._onLeave)
+    }
+
+    private _onMouseMove = (e: MouseEvent) => {
+        this._updateMousePos(e)
+        this.move?.(e)
+    }
+
+    private _onWheel = (e: WheelEvent) => {
+        this._updateMousePos(e)
+        this.wheel?.(e)
+    }
+
+    private _onMouseDown = (e: MouseEvent) => {
+        this.isPressed = true
+        this.button = e.button
+        this.down?.(e)
+    }
+
+    private _onMouseUp = (e: MouseEvent) => {
+        this.isPressed = false
+        this.button = null
+        this.up?.(e)
+    }
+
+    private _onClick = (e: MouseEvent) => {
+        this.click?.(e)
+    }
+
+    private _onDblClick = (e: MouseEvent) => {
+        this.dblClick?.(e)
+    }
+
+    private _onEnter = (e: MouseEvent) => {
+        this.enter?.(e)
+    }
+
+    private _onLeave = (e: MouseEvent) => {
+        this.leave?.(e)
+    }
+
+    private _updateMousePos(e: MouseEvent | WheelEvent) {
         this._px = this._x
         this._py = this._y
         this._ppos.set(this._px, this._py)
-        let bbox = canvas.getBoundingClientRect()
-        this._x = abs(round(e.clientX - bbox.left))
-        this._y = abs(round(e.clientY - bbox.top))
+
+        const bbox = this._canvas.getBoundingClientRect()
+        this._x = round(e.clientX - bbox.left)
+        this._y = round(e.clientY - bbox.top)
         this._pos.set(this._x, this._y)
     }
 
-    /**
-     * Current mouse `X` position.
-     */
     get x() {
         return this._x
     }
 
-    /**
-     * Current mouse `Y` position.
-     */
     get y() {
         return this._y
     }
 
-    /**
-     * Previous mouse `X` position.
-     */
     get px() {
         return this._px
     }
 
-    /**
-     * Previous mouse `Y` position.
-     */
     get py() {
         return this._py
     }
@@ -170,5 +135,13 @@ export class Mouse {
 
     get ppos() {
         return this._ppos
+    }
+
+    get deltaX() {
+        return this._x - this._px
+    }
+
+    get deltaY() {
+        return this._y - this._py
     }
 }

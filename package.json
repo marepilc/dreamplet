@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/marepilc/dreamplet.git"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "main": "dist/dreamplet.umd.js",
   "module": "dist/dreamplet.es.js",
