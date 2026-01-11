@@ -5,7 +5,7 @@ async function run() {
     const engine = new Engine('canvas');
     await engine.init();
 
-    const cornerRect = new Rect(10, 10, 50, 50, '#ffffff');
+    const cornerRect = new Rect(10, 10, 50, 50, 'oklch(0.597 0.225 7.805)');
     engine.add(cornerRect);
 
     const circle = new Circle(200, 200, 80, '#00ffcc');

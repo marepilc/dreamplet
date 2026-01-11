@@ -7,7 +7,11 @@
     "dev": "vite playground",
     "playground": "vite playground",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "docs:dev": "npm run dev --prefix docs",
+    "docs:build": "npm run build --prefix docs"
   },
   "repository": {
     "type": "git",
@@ -22,9 +26,12 @@
   "homepage": "https://github.com/marepilc/dreamplet#readme",
   "devDependencies": {
     "@types/node": "^25.0.6",
+    "@vitest/ui": "^4.0.16",
+    "jsdom": "^27.4.0",
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
-    "vite-plugin-dts": "^4.5.4"
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^4.0.16"
   },
   "dependencies": {
     "canvaskit-wasm": "^0.40.0",

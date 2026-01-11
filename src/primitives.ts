@@ -1,5 +1,6 @@
 import { CanvasKit } from 'canvaskit-wasm';
 import { getCanvasKit } from './loader';
+import { parseOklch } from './colors';
 
 export abstract class Primitive {
   x: number = 0;
@@ -17,6 +18,10 @@ export abstract class Primitive {
   abstract draw(canvas: any): void;
 
   protected parseColor(color: string) {
+    if (color.startsWith('oklch')) {
+      const parsed = parseOklch(color);
+      if (parsed) return parsed;
+    }
     return this.ck.parseColorString(color);
   }
 }
