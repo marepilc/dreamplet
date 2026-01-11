@@ -2,8 +2,7 @@ import { Engine, Circle, Rect } from '../src';
 import gsap from 'gsap';
 
 async function run() {
-    const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-    const engine = new Engine({ canvas });
+    const engine = new Engine('canvas');
     await engine.init();
 
     const cornerRect = new Rect(10, 10, 50, 50, '#ffffff');
@@ -33,4 +32,4 @@ async function run() {
     });
 }
 
-run();
+run().catch(console.error);

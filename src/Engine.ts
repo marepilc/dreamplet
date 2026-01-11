@@ -12,23 +12,33 @@ export interface EngineOptions {
 export class Engine {
   private ck!: CanvasKit;
   private surface!: Surface;
-  private canvas: HTMLCanvasElement;
+  private readonly canvas: HTMLCanvasElement;
   private dpr: number = window.devicePixelRatio || 1;
   private isDirty: boolean = true;
   private primitives: Primitive[] = [];
 
-  constructor(options: EngineOptions) {
-    this.canvas = options.canvas;
-    this.dpr = window.devicePixelRatio || 1;
+  constructor(canvasId: string);
+  constructor(options: EngineOptions);
+  constructor(optionsOrId: EngineOptions | string) {
+    if (typeof optionsOrId === 'string') {
+      const canvas = document.getElementById(optionsOrId) as HTMLCanvasElement;
+      if (!canvas) {
+        throw new Error(`Canvas element with id "${optionsOrId}" not found`);
+      }
+      this.canvas = canvas;
+    } else {
+      this.canvas = optionsOrId.canvas;
+      if (optionsOrId.width) {
+        this.canvas.width = optionsOrId.width * this.dpr;
+        this.canvas.style.width = `${optionsOrId.width}px`;
+      }
+      if (optionsOrId.height) {
+        this.canvas.height = optionsOrId.height * this.dpr;
+        this.canvas.style.height = `${optionsOrId.height}px`;
+      }
+    }
 
-    if (options.width) {
-      this.canvas.width = options.width * this.dpr;
-      this.canvas.style.width = `${options.width}px`;
-    }
-    if (options.height) {
-      this.canvas.height = options.height * this.dpr;
-      this.canvas.style.height = `${options.height}px`;
-    }
+    this.dpr = window.devicePixelRatio || 1;
     
     // GSAP integration: observe property changes if possible or just use the ticker
     // For now, we'll mark dirty on every tick if there's any GSAP activity, 
