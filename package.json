@@ -1,0 +1,33 @@
+{
+  "name": "dreamplet",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "dev": "vite playground",
+    "playground": "vite playground",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marepilc/dreamplet.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marepilc/dreamplet/issues"
+  },
+  "homepage": "https://github.com/marepilc/dreamplet#readme",
+  "devDependencies": {
+    "@types/node": "^25.0.6",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vite-plugin-dts": "^4.5.4"
+  },
+  "dependencies": {
+    "canvaskit-wasm": "^0.40.0",
+    "gsap": "^3.14.2"
+  }
+}

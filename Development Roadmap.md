@@ -105,3 +105,20 @@ The first success metric will be a script where:
 1. **dreamplet** initializes.
 2. A `Circle` is created with a simple Hex color string.
 3. `gsap.to(circle, { x: 500, duration: 2, ease: "expo.out" })` works seamlessly.
+
+---
+
+## 🛠️ How to use the Playground
+
+The playground is a dedicated space for writing and testing sketches using the Dreamplet library.
+
+1.  **Start the Playground:**
+    Run the following command in your terminal:
+    ```bash
+    npm run dev
+    ```
+    (or `npm run playground`)
+2.  **Access in Browser:**
+    Open your browser and navigate to the URL provided by Vite (usually `http://localhost:5173`).
+3.  **Create Sketches:**
+    Edit `playground/sketch.ts` to create your own animations. The playground automatically reloads when you save changes.
