@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
+    "format": "prettier --write .",
     "docs:dev": "npm run dev --prefix docs",
     "docs:build": "npm run build --prefix docs"
   },
@@ -28,6 +29,7 @@
     "@types/node": "^25.0.6",
     "@vitest/ui": "^4.0.16",
     "jsdom": "^27.4.0",
+    "prettier": "^3.7.4",
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
     "vite-plugin-dts": "^4.5.4",

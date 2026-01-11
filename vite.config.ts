@@ -1,23 +1,23 @@
-import { defineConfig } from 'vite';
-import dts from 'vite-plugin-dts';
-import { resolve } from 'path';
+import { defineConfig } from 'vite'
+import dts from 'vite-plugin-dts'
+import { resolve } from 'path'
 
 export default defineConfig({
   build: {
     lib: {
       entry: resolve(process.cwd(), 'src/index.ts'),
       name: 'Dreamplet',
-      fileName: 'dreamplet',
+      fileName: 'dreamplet'
     },
     rollupOptions: {
       external: ['canvaskit-wasm', 'gsap'],
       output: {
         globals: {
           'canvaskit-wasm': 'CanvasKitInit',
-          'gsap': 'gsap',
-        },
-      },
-    },
+          gsap: 'gsap'
+        }
+      }
+    }
   },
-  plugins: [dts({ insertTypesEntry: true })],
-});
+  plugins: [dts({ insertTypesEntry: true })]
+})

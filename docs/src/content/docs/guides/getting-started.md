@@ -22,29 +22,29 @@ To get started, you need a `<canvas>` element in your HTML:
 Then, you can initialize the engine and start drawing:
 
 ```typescript
-import { Engine, Circle, Rect } from 'dreamplet';
-import gsap from 'gsap';
+import { Engine, Circle, Rect } from 'dreamplet'
+import gsap from 'gsap'
 
 async function run() {
-    // Initialize the engine with the canvas ID
-    const engine = new Engine('canvas');
-    await engine.init();
+  // Initialize the engine with the canvas ID
+  const engine = new Engine('canvas')
+  await engine.init()
 
-    // Create a circle
-    const circle = new Circle(200, 200, 80, '#00ffcc');
-    engine.add(circle);
+  // Create a circle
+  const circle = new Circle(200, 200, 80, '#00ffcc')
+  engine.add(circle)
 
-    // Animate with GSAP
-    gsap.to(circle, {
-        x: 600,
-        duration: 2,
-        repeat: -1,
-        yoyo: true,
-        ease: 'power2.inOut'
-    });
+  // Animate with GSAP
+  gsap.to(circle, {
+    x: 600,
+    duration: 2,
+    repeat: -1,
+    yoyo: true,
+    ease: 'power2.inOut'
+  })
 }
 
-run().catch(console.error);
+run().catch(console.error)
 ```
 
 ## Next Steps
